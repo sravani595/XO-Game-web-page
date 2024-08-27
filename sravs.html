@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XO Game</title>
+    <style>
+            /* Keyframe for zoomIn animation */
+        @keyframes zoomIn {
+        from {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+        }
+
+        /* Keyframe for fadeIn animation */
+        @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgb(255, 255, 255);
+            color: rgb(6, 0, 0);
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            transition: opacity 0.5s ease;
+        }
+
+        .front-page {
+            text-align: justify;
+            background-color: rgb(255, 255, 255);
+            color: rgb(6, 0, 0);
+            margin-top: 150px;
+            font-size: xx-large;
+            margin-left: 35px;
+        }
+
+        .container {
+            display: none;
+        }
+
+        header {
+            background: linear-gradient(45deg, rgb(63, 193, 201), rgb(117, 236, 129));
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        #img1 {
+            height: 50px;
+            width: 50px;
+            margin-left: 15px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        #img2 {
+            height: 300px;
+            width: 600px;
+            padding: 100px;
+            margin-left: 100px;
+            animation: zoomIn 2s ease forwards; /* Add zoom-in animation */
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, rgb(63, 193, 201), rgb(117, 236, 129));
+            padding: 5px;
+        }
+
+        nav ul {
+            list-style-type: none;
+        }
+
+        nav ul li {
+            margin-bottom: 1px;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        #description-btn {
+            margin-top: 100px;
+        }
+
+        #play-btn {
+            margin-top: 10px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            grid-gap: 7px;
+            margin-top: 2px;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 70px;
+            height: 70px;
+            background-color: rgb(131, 206, 231);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            position: relative;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-top: 1px;
+        }
+
+        #game-status {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+
+        #game-options {
+            margin-top: 10px;
+        }
+
+        /* Hide elements initially */
+        .hidden {
+            display: none;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+        }
+
+        .description-section {
+            display: none;
+            padding: 80px 60px;
+            margin-left: 100px;
+        }
+
+        .description-section h1 {
+            color: rgb(246, 50, 50);
+        }
+
+        .description-section img {
+            height: 200px;
+            width: 600px;
+            margin-left: 100px;
+            animation: fadeIn 2s ease forwards; /* Add fade-in animation */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img id="img1" src="https://c8.alamy.com/comp/2G3KD67/illustration-of-hand-drawn-tic-tac-toe-competition-2G3KD67.jpg" alt="Tic Tac Toe Logo">
+        <nav>
+            <ul>
+                <li><button id="description-btn">Description</button></li>
+                <li><button id="play-btn">Play</button></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="front-page" id="front-page">
+        <span>Hello, </span><span style='font-size:30px;'>&#128075;</span><span>Welcome to the Game.</span>
+        <div>
+            <img id="img2" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS194Gc1OnHdeEssw7TlyKny7Nq4XJqG2LPKE5jUuZfdYyH2_VN-r8zWxWzMeuyLUXgPs4&usqp=CAU">
+        </div>
+    </div>
+    <div class="container" id="container">
+        <h1>XO Game</h1>
+        <div id="game-board" class="board"></div>
+        <p id="game-status"></p>
+        <div id="game-options" class="hidden">
+            <button id="replay-btn">Replay</button>
+            <button id="quit-btn">Quit</button>
+        </div>
+    </div>
+    <div class="description-section" id="description-section">
+        <h1>XO Game Description</h1>
+        <p>
+            <b>Setup:<br></b>
+            <ol>
+                <li>The game is played on a 3x3 grid.</li>
+                <li>One player uses the mark "X" and the computer uses the mark "O".</li>
+            </ol>
+            <b>How to Play:</b>
+            <ol>
+                <li>Taking Turns:<br>
+                    <ul>
+                        <li>Players alternate turns. On your turn, place your mark ("X" or "O") in any empty cell of the grid.</li>
+                    </ul>
+                </li>
+                <li>Winning the Game:</li>
+                <ul>
+                    <li>The first player to get three of their marks in a row, either horizontally, vertically, or diagonally, wins the game.</li>
+                    <li>After a player wins, the game ends immediately.</li>
+                </ul>
+                <li>Draw:<br>
+                    <ul>
+                        <li>If all cells are filled and no player has achieved three marks in a row, the game ends in a draw.</li>
+                    </ul>
+                </li>
+            </ol>
+            <b>Winning Combinations:<br></b>
+            <ul>
+                <li>Horizontal: Three marks in a row on any of the three horizontal lines.</li>
+                <li>Vertical: Three marks in a row on any of the three vertical lines.</li>
+                <li>Diagonal: Three marks in a row on either of the two diagonal lines.</li>
+            </ul>
+            <img src="https://tse2.mm.bing.net/th?id=OIP.Qhv467G5TcWEqNlWV8a_vAHaCe&pid=Api&P=0&h=180" alt="Winning Combinations">
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playBtn = document.getElementById('play-btn');
+            const descriptionBtn = document.getElementById('description-btn');
+            const replayBtn = document.getElementById('replay-btn');
+            const quitBtn = document.getElementById('quit-btn');
+            const gameBoard = document.getElementById('game-board');
+            const gameStatus = document.getElementById('game-status');
+            const gameOptions = document.getElementById('game-options');
+            const frontPage = document.getElementById('front-page');
+            const container = document.getElementById('container');
+            const descriptionSection = document.getElementById('description-section');
+
+            let board = [
+                ['_', '_', '_'],
+                ['_', '_', '_'],
+                ['_', '_', '_']
+            ];
+
+            let currentPlayer = 'X'; // Player starts with 'X'
+            let gameOver = false;
+
+            // Function to initialize the game board
+            function initializeBoard() {
+                gameBoard.innerHTML = '';
+                board.forEach((row, rowIndex) => {
+                    row.forEach((cell, colIndex) => {
+                        const cellDiv = document.createElement('div');
+                        cellDiv.classList.add('cell');
+                        cellDiv.dataset.row = rowIndex;
+                        cellDiv.dataset.col = colIndex;
+                        cellDiv.textContent = cell === '_' ? '' : cell;
+                        cellDiv.addEventListener('click', cellClickHandler);
+                        gameBoard.appendChild(cellDiv);
+                    });
+                });
+            }
+
+            // Function to handle cell clicks (Player's move)
+            function cellClickHandler(event) {
+                if (gameOver) return;
+
+                const row = parseInt(event.target.dataset.row);
+                const col = parseInt(event.target.dataset.col);
+
+                if (board[row][col] === '_') {
+                    board[row][col] = currentPlayer;
+                    event.target.textContent = currentPlayer;
+
+                    if (checkWin(currentPlayer)) {
+                        gameStatus.textContent = `${currentPlayer} wins!`;
+                        gameStatus.style.color = 'green';
+                        gameOver = true;
+                        gameOptions.classList.remove('hidden');
+                    } else if (checkDraw()) {
+                        gameStatus.textContent = `It's a draw!`;
+                        gameStatus.style.color = 'orange';
+                        gameOver = true;
+                        gameOptions.classList.remove('hidden');
+                    } else {
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                        if (currentPlayer === 'O') {
+                            setTimeout(computerMove, 500); // Delay computer's move
+                        }
+                    }
+                }
+            }
+
+            // Function to make a random move by the computer
+            function computerMove() {
+                const emptyCells = [];
+                board.forEach((row, rowIndex) => {
+                    row.forEach((cell, colIndex) => {
+                        if (cell === '_') {
+                            emptyCells.push({ row: rowIndex, col: colIndex });
+                        }
+                    });
+                });
+
+                if (emptyCells.length > 0) {
+                    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                    board[randomCell.row][randomCell.col] = 'O';
+
+                    const cellDiv = document.querySelector(`.cell[data-row="${randomCell.row}"][data-col="${randomCell.col}"]`);
+                    cellDiv.textContent = 'O';
+
+                    if (checkWin('O')) {
+                        gameStatus.textContent = `O wins!`;
+                        gameStatus.style.color = 'red';
+                        gameOver = true;
+                        gameOptions.classList.remove('hidden');
+                    } else if (checkDraw()) {
+                        gameStatus.textContent = `It's a draw!`;
+                        gameStatus.style.color = 'orange';
+                        gameOver = true;
+                        gameOptions.classList.remove('hidden');
+                    } else {
+                        currentPlayer = 'X';
+                    }
+                }
+            }
+
+            // Function to check for a win condition
+            function checkWin(player) {
+                // Check rows
+                for (let row = 0; row < 3; row++) {
+                    if (board[row][0] === player && board[row][1] === player && board[row][2] === player) {
+                        return true;
+                    }
+                }
+
+                // Check columns
+                for (let col = 0; col < 3; col++) {
+                    if (board[0][col] === player && board[1][col] === player && board[2][col] === player) {
+                        return true;
+                    }
+                }
+
+                // Check diagonals
+                if (board[0][0] === player && board[1][1] === player && board[2][2] === player) {
+                    return true;
+                }
+
+                if (board[0][2] === player && board[1][1] === player && board[2][0] === player) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            // Function to check for a draw condition
+            function checkDraw() {
+                return board.flat().every(cell => cell !== '_');
+            }
+
+            // Function to reset the game
+            function resetGame() {
+                board = [
+                    ['_', '_', '_'],
+                    ['_', '_', '_'],
+                    ['_', '_', '_']
+                ];
+                currentPlayer = 'X';
+                gameOver = false;
+                gameStatus.textContent = '';
+                gameStatus.style.color = 'black';
+                gameOptions.classList.add('hidden');
+                initializeBoard();
+            }
+
+            playBtn.addEventListener('click', function () {
+                container.style.display = 'flex';
+                frontPage.style.display = 'none';
+                descriptionSection.style.display = 'none';
+                resetGame();
+            });
+
+            descriptionBtn.addEventListener('click', function () {
+                container.style.display = 'none';
+                frontPage.style.display = 'none';
+                descriptionSection.style.display = 'block';
+            });
+
+            replayBtn.addEventListener('click', function () {
+                resetGame();
+            });
+
+            quitBtn.addEventListener('click', function () {
+                container.style.display = 'none';
+                frontPage.style.display = 'block';
+                descriptionSection.style.display = 'none';
+            });
+
+            initializeBoard();
+        });
+    </script>
+</body>
+</html>
